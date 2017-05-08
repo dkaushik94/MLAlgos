@@ -6,9 +6,9 @@ This is a repository for different machine learning algorithms. The alogrithms a
 
 To run the algorithms you would need the following libraries
 
-*NumPy
-*SciPy
-*MatPlotLib
+* MatPlotLib
+* Numpy
+* SciPy
   
 I have included other libraries for vscode. Feel free to customize your own environment.
 Initialise a virtual environment and execute using ipython or any interpreter you are using.
@@ -17,13 +17,13 @@ Setup virtual environemnt:
 ```
 virtualenv -p python3 folderName or .(for current directory)
 ```
-Installing packages.```
-
+Installing packages.
 Note: Make sure you initialise virtual env before installing them or it will install globally.
 ```
 pip3 install numpy scipy matplotlib ipython pandas
 ```
-for global installation
+for global installation:
+```
 sudo apt-get install python-numpy python-scipy python-matplotlib ipython python-pandas
 ```
 Note: You can directly install Anaconda or Canopy as they include a vast range of libraries you may or may not need.
@@ -31,13 +31,15 @@ Anaconda: https://www.continuum.io/downloads
 Canopy: https://store.enthought.com/downloads/
 
 ### Running
-
+Initalise virtual environment:
 ```
 source venv/bin/activate
 ```
+Change directories
 ```
-cd to algo directory
+cd <algo directory>
 ```
+Run script:
 ```
 ipython/python3 <scriptName>.py
 ```
