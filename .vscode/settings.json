@@ -1,0 +1,9 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+    "python.venvPath": "/home/debojit/ML/MLAlgos/venv/",
+    "python.linting.pylintEnabled": false,
+    "python.pythonPath": "/home/debojit/ML/MLAlgos/venv/bin/python",
+    "python.autoComplete.extraPaths": [
+        "/home/debojit/ML/MLAlgos/venv/lib/python3.5/site-packages"
+    ]
+}
