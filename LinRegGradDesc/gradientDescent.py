@@ -5,6 +5,8 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+import math
+
 
 
 '''
@@ -17,8 +19,7 @@ def costFunction(theta0, theta1, mode, x, y, setSize):
     if mode and mode is True:
         try:
             for it, item in enumerate(x):
-                temp += theta0 + theta1*x[it] - y[it]
-            temp = temp/setSize
+                temp += (theta0 + theta1*x[it] - y[it])
             return temp
         except Exception as e:
             print(e)
@@ -27,7 +28,6 @@ def costFunction(theta0, theta1, mode, x, y, setSize):
         try:
             for it, item in enumerate(x):
                 temp += (theta0 + theta1*x[it] - y[it])*x[it]
-            temp = temp/setSize
             return temp
         except Exception:
             print(e)
@@ -38,8 +38,8 @@ def costFunction(theta0, theta1, mode, x, y, setSize):
 
 
 '''
-    Convergene condition:
-    If current slop - previous slope is < 0.01, then state convergence is true, and stop iterations.
+    Convergence condition:
+    If current slop - previous slope is < 0.000001, then state convergence is true, and stop iterations.
 '''
 def convergence(prevTheta1, currTheta1):
     '''
@@ -49,19 +49,40 @@ def convergence(prevTheta1, currTheta1):
     currTheta1 = abs(currTheta1)
     conv = max(prevTheta1,currTheta1) - min(prevTheta1, currTheta1)
 
-    if conv<0.0001:
+    if conv<0.000001:
         return True
     else:
         return False
 
-
-def regressionLine(slope, intercept, plot):
-    x = np.arange(50)
+'''
+    Line plotting before and after.
+'''
+def regressionLine(slope, intercept, plot, i, color=None):
+    x = np.arange(i)
     y = []
-    for point in range(50):
+    for point in range(i):
         temp = slope*x[point] + intercept
         y.append(temp)
-    plot.plot(x,y)
+    if color is None:
+        plot.plot(x,y)
+    else:
+        plot.plot(x,y,color=color)
+
+
+
+'''
+    Error function for hypotheses.
+'''
+def errorValue(x, y, theta0, theta1, setSize, it, plot):
+    Error = 0
+    try:
+        for i in range(setSize):
+            Error += (y[i] - (theta1*x[i] + theta0)) ** 2
+        err = Error / setSize
+        plot.plot(err, it, 'go')
+    except Exception as e:
+        print(e)
+
 
 
 
@@ -75,22 +96,37 @@ def gradientDescent(price, area, plot):
         theta0 = np.float64(0)
         theta1 = np.float64(0)
         m = len(price)
-        alpha = 0.001
+        alpha = 0.0001
         temp0 = np.float64(0)
         temp1 = np.float64(0)
         J0 = np.float64(0)
         J1 = np.float64(0)
         converge = False
+        error = np.empty([])
+        i = 0
         while converge is False:
             J0 = costFunction(theta0, theta1, True, price, area, m)
             J1 = costFunction(theta0, theta1, False, price, area, m)
-            temp0 = theta0 - alpha*J0
-            temp1 = theta0 - alpha*J1
+            print("Iteration number: %s" %i)
+            
+            #Calculate error from cost function. Should be decreasing WRT to iterations.
+            errorValue(price, area, theta0, theta1, m, i, plot)
+            
+            temp0 = theta0 - (alpha*J0/m)
+            temp1 = theta0 - (alpha*J1/m)
+            
+            #convergence test. If slop is changing very minutely then stop.
             converge = convergence(theta1, temp1)
+            
             theta0 = temp0
             theta1 = temp1
-            regressionLine(theta1, theta0, plot)
-        return theta0,theta1
+            i += 1
+
+            if math.isnan(theta0) or math.isnan(theta1) is True:
+                break
+            else:
+                pass
+        return theta0,theta1, i
     except Exception as e:
         print(e)
         raise Exception("Please check parameters.")
@@ -108,13 +144,19 @@ if __name__ == '__main__':
             price[it] = l[2]
             area[it] = l[5]
         
-        a = np.random.rand(50)*40
-        b = np.random.rand(50)*40
-        plt.plot(a,b,'o')
-        theta0, theta1 = gradientDescent(a,b, plt)
+        
+        ''' Feature Scaling. 
+            (
+                Every entry divded my highest number of the set. 
+                Another option is to subtract mean of set from eveery element and divide it by range of values for that column.
+            )
+        '''
+        price = price/max(price)
+        area = area/max(area)
+        
+        theta0, theta1, i = gradientDescent(price, area, plt)
         print("Theta0: %s Theta1: %s" %(theta0, theta1))
-        # x,y = regressionLine(theta1,theta0)
-        # plt.plot(x,y,'-')
+        regressionLine(theta1,theta0, plt, i, color = 'red')
         plt.show()
     except Exception:
         raise Exception("Something is wrong.")

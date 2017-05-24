@@ -53,7 +53,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* Professo Andrew Ng.
+* Professor Andrew Ng.
 * Resources include: Hackerearth engineering blog.
-* Datasets: Kaggle
+* Datasets: Kaggle.
 * Stack Overflow.
